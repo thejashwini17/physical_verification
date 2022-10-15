@@ -83,15 +83,19 @@ Several open repositories make up the SkyWater Open PDK, primarily:
 #### The libraries supported by open_pdks are:
 
 * Digital standard cells (ex: sky130_fd_sc_hd) 
+
 ![image](https://user-images.githubusercontent.com/115495342/195986137-21b9cead-e72c-43fe-a7bc-998a9dc9ec20.png)
 
 * Primitive devices/analog (ex: sky130_fd_pr)
+
 ![image](https://user-images.githubusercontent.com/115495342/195986168-b850abac-e422-4523-964a-76f2f817f0f1.png)
 
 * I/O cells (ex: sky130_fd_io)
+
 ![image](https://user-images.githubusercontent.com/115495342/195986195-ff5cf470-f237-4e4f-9ba7-68f1d6729f86.png)
 
 * 3rd party libraries (ex: sky130_ml_xx_hd)
+
 ![image](https://user-images.githubusercontent.com/115495342/195986212-294d7d76-f805-4e21-bc7b-67795b969b5e.png)
 
 
