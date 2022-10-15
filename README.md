@@ -465,6 +465,80 @@ From the file menu, open exercise1 which should open a .mag layout containing 4 
 #### Ex1: Width rule
 ![image](https://user-images.githubusercontent.com/115495342/196002377-18e947ee-7b1c-47c5-8df1-20ccea6cb14e.png)
 
+The way to fix this manually is to increase the width of the metal2 segment upto or above the required 0.14um. Set your cursor box around the area and use the middle mouse key to paint the entire area within the box with metal 2.
+Or we can also fix by using commands `box width 0.14um` and `paint m2`.
+![image](https://user-images.githubusercontent.com/115495342/196002562-18abf7c4-8321-4ace-8186-331b8cb875f0.png)
+
+Now the error has gone. 
+
+#### Ex2: Spacing error
+Similarly, for the spacing error manually  we need to fix the spacing by moving one of the components by selecting and usi g the arrow keys to move. Or else by using command `move e 0.14um` 
+Before fix:
+![image](https://user-images.githubusercontent.com/115495342/196002639-14e2d4c8-375a-4503-b7aa-e46e2e7497b1.png)
+
+After fix:
+![image](https://user-images.githubusercontent.com/115495342/196002654-afaf3270-46c9-49ec-ba17-cf00c0963437.png)
+
+#### Ex3: Lab - Wide Spacing and Notch Rules
+##### Wide spacing
+An asymmetrical spacing error and is solved in the same way like moving one of the component
+
+Before fix:
+![image](https://user-images.githubusercontent.com/115495342/196002814-1531ad1d-a7c6-4504-882e-7576387a5548.png)
+
+After fix:
+![image](https://user-images.githubusercontent.com/115495342/196002824-7ac1e257-3503-410b-9a0e-ac65951ece1a.png)
+
+#### Notch 
+The error is solved by selecting half the figure and stretching it away from the notch using Shift+arrow key on numpad.
+
+Before fix:
+![image](https://user-images.githubusercontent.com/115495342/196002871-33f77598-cb09-4f27-8403-980bc3d60265.png)
+
+After fix:
+![image](https://user-images.githubusercontent.com/115495342/196002881-f197960b-ae1a-4aa3-aab8-63e55ccb8d79.png)
+
+### Lab: via size, multiple via, via overlap and auto-generated via
+
+Go to file and open exercise 2. This one is all about vias and the violations they throw. 
+![image](https://user-images.githubusercontent.com/115495342/196002934-52689d40-4e9c-4de7-a62c-006ed8544383.png)
+
+1. Via size is simply solved by stretching to the side and then vertically.
+Before fix:
+![image](https://user-images.githubusercontent.com/115495342/196002965-ec2b9a61-89b1-4072-8724-7184f639f5e7.png)
+
+After fix:
+![image](https://user-images.githubusercontent.com/115495342/196002973-f0799d88-9d69-425b-a084-285c4fde3b83.png)
+
+2. Multiple vias is an area on which contact cuts will be drawn onto by the algorithm. 
+Before fix:
+![image](https://user-images.githubusercontent.com/115495342/196003080-3ce5fdb7-57e8-48e4-98f5-5ce28807d777.png)
+
+To see the cuts, type ```cif see MCON``` after boxing the figure within your cursor box and you should see this
+After fix:
+![image](https://user-images.githubusercontent.com/115495342/196003056-bcb17ac4-0a30-4568-8759-89861c65a427.png)
+
+3.  Via overlapping: way to solve this is to surround the point with the desired width of metal1 (0.03um) and then by an additional 0.06um padding either horizontally or vertically. 
+Before fix:
+![image](https://user-images.githubusercontent.com/115495342/196003169-f2d07154-23ee-4a26-9921-f90e8e716a40.png)
+
+After fix:
+![image](https://user-images.githubusercontent.com/115495342/196003218-68050a97-5046-4478-a495-f040498b559d.png)
+
+### Lab:  Minimum Area and Minimum Hole Rule
+
+#### Minimum area rule
+Load exercise3.mag, select the metal and use the B key, we see that the current area is 0.2um2.
+![image](https://user-images.githubusercontent.com/115495342/196003418-2490cf82-ca8b-4aff-ba29-33aa9229644f.png)
+
+
+
+
+
+
+
+
+
 
 
 
