@@ -531,6 +531,108 @@ After fix:
 Load exercise3.mag, select the metal and use the B key, we see that the current area is 0.2um2.
 ![image](https://user-images.githubusercontent.com/115495342/196003418-2490cf82-ca8b-4aff-ba29-33aa9229644f.png)
 
+To fix select area and stretch the layer to meet the requirement.
+![image](https://user-images.githubusercontent.com/115495342/196003556-a45b22cf-1949-4dd6-9d13-4fe89b853126.png)
+
+#### minimum hole area violation
+
+To see this DRC error, we need to run Magic in the full DRC mode. We can do this by clicking on the menu button DRC --> DRC complete. Next we must wait Magic to update the DRC count, and then run a DRC report.
+![image](https://user-images.githubusercontent.com/115495342/196003620-1b8bf6fe-8ce1-4cfc-8439-0d5d6bf8d18a.png)
+
+If we manually set the cursor box to the size of the hole, we see it is 0.07um2 which is smaller than allowed. To fix this we must manually erase sections of the metal till the hole is big enough to pass DRC.
+![image](https://user-images.githubusercontent.com/115495342/196003694-1f17afbc-ec54-409c-9a67-2cfaaceecb49.png)
+
+#### Lab: Wells and Deep N-Wells'
+ Open exercise4.mag which has wells and taps, so DRC check needs to be set at full to check for these.
+![image](https://user-images.githubusercontent.com/115495342/196003745-abe0e24b-c955-43d1-87fd-5eaf07d92299.png)
+
+Example 4a: Here we have a basic well error, as the wells do not have taps. The n-well shows an error as it is currently floating, though the "p-well" does not since this process doesn't actually consider p-wells unless they are in deep n-wells, and are instead counted as p-substrates.
+![image](https://user-images.githubusercontent.com/115495342/196003840-5920e1da-7dc6-4ed8-b1ca-28e8ef931225.png)
+
+To fix this error, paint a layer of n type material into the n well. The layer is called nsubstratendiff. Though this does not fix the DRC error.
+![image](https://user-images.githubusercontent.com/115495342/196003886-a4ba66ad-c48e-484b-a556-d1d8a13ea67f.png)
+
+The n-well should not be floating, as the tap should be connected to a layer of local interconnect. So by painting a layer of nsubstratencontact. While this gets rid of the n-well DRC error, it creates smaller errors like overlap and surround.
+![image](https://user-images.githubusercontent.com/115495342/196003893-a3627d1e-a3e5-469a-b185-4776fb87778c.png)
+
+Adjust the layers using what we have learnt till now by growing, stretching and adding in local interconnect, and we get no DRC errors.
+![image](https://user-images.githubusercontent.com/115495342/196003979-96f92e08-cd38-44b1-aee7-3ef278158939.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Day 5: Running LVS
+
+Layout vs Schematic (LVS) and Design Rule Checking (DRC) are the two most important verification procedures before a chip design is sent to the foundry for manufacturing. However, as compared to DRC, a chip that fails LVS will pass the foundry checks and go into manufacturing, but stands at a risk of returning as a non-working chip.
+
+![image](https://user-images.githubusercontent.com/115495342/196004104-bc8e3481-4795-4207-b81e-b05cf3fa57f1.png)
+
+LVS tools are incredibly quick and effective at telling you whether the two netlists match or not. These tools, however, do a terrible job of explaining why netlists do not match when they do. It is crucial for a verification engineer to understand how to interpret the findings of an LVS tool and identify the issue.
+
+#### Lab: Intro to LVS
+Use the following commands
+1. `git clone https://github.com/RTimothyEdwards/vsd_lvs_lab.get`
+2. `cd vsd_lvs_lab`
+3. `cd exercise_1`
+4. `ls`
+ 
+`netA.spice`   `netB.spice`
+
+Read file `netA.spice`
+![image](https://user-images.githubusercontent.com/115495342/196004332-aff905e8-e41d-4e19-9f5c-3eb586f2fc90.png)
+
+Read file `netB.spice`
+![image](https://user-images.githubusercontent.com/115495342/196004557-cbc37c2a-a7a6-445d-8c9a-2ff2ae2f8464.png)
+
+Open netgen and running lvs using the command ```lvs netA.spice netB.spice``` we get the following output
+![image](https://user-images.githubusercontent.com/115495342/196004675-3d2649f6-d7de-4cde-bab6-e5dadb4211db.png)
+
+Knowing the details about the comparison lie in the comp.out file, so reading that we can able to see
+![image](https://user-images.githubusercontent.com/115495342/196004734-30124624-6369-4e3f-bb7b-84770f3ed730.png)
+
+As not much is seen from 2 netlists that are identical, so let's edit the first pin pf cell 3 in netA.spice from "C" to "B"
+![image](https://user-images.githubusercontent.com/115495342/196004766-39b3748d-a980-4247-9814-029c229ce7fb.png)
+
+As seen clearly the instances where the mismatches occur, which pins and which nets are missing from which cells in either of the two nets.
+
+### Lab: LVS with Blackbox Subcircuits
+ In exercise 3, the following netlists that have empty subcircuit definitions. Netgen will treat these subcircuits as blackbox entries.
+ The file `netA.spice` and `netB.spice` contains:
+ ![image](https://user-images.githubusercontent.com/115495342/196005062-c328fe87-1ba4-49cb-9722-44778064e69c.png)
+ 
+ Run the lvs on these two netlists gives the result as:
+ ![image](https://user-images.githubusercontent.com/115495342/196005236-d3536f52-6c9c-47be-89a4-ea3af19efa34.png)
+ 
+### Lab: LVS For Power-On-Reset Circuit
+Generate the schematic netlist. Invoke xschem window.
+![image](https://user-images.githubusercontent.com/115495342/196005401-e4b36706-4967-44c0-bb3f-a5c939f8be38.png)
+
+![image](https://user-images.githubusercontent.com/115495342/196005422-53c3066a-11da-4db3-82b2-770516c2f680.png)
+
+
+ 
+
+
+
+
 
 
 
