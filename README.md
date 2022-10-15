@@ -627,6 +627,10 @@ Generate the schematic netlist. Invoke xschem window.
 
 ![image](https://user-images.githubusercontent.com/115495342/196005422-53c3066a-11da-4db3-82b2-770516c2f680.png)
 
+From simulation menu, enable the option: "LVS netlist: top level is a .subckt" and click netlist. This should generate a .spice file. Now open magic and extract. Later, running lvs on these two netlists, we get a mismatch
+![image](https://user-images.githubusercontent.com/115495342/196005775-79512dcf-75eb-43de-bfb5-d9a58a08afd1.png)
+
+This is because as we do not have the subcircuit definitions for the files. Run lvs for the wrapper we get a net match but a pin mismatch. The reason for this can be pinpointed by opening the wrapper subcircuit in magic and finding that ip_analog[4] pin in the layout is tied to io_clamp_high[0]. This can be fixed by replacing the bridge between the two nets with a resistor of type rmetal3 to separate the cells.
 
  
 
@@ -646,22 +650,3 @@ Generate the schematic netlist. Invoke xschem window.
 * Kunal Gosh
 * VSD-IAT
 * Google
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
