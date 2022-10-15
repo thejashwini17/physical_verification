@@ -84,10 +84,18 @@ Several open repositories make up the SkyWater Open PDK, primarily:
 
 * Digital standard cells (ex: sky130_fd_sc_hd) 
 ![image](https://user-images.githubusercontent.com/115495342/195986137-21b9cead-e72c-43fe-a7bc-998a9dc9ec20.png)
+
 * Primitive devices/analog (ex: sky130_fd_pr)
 ![image](https://user-images.githubusercontent.com/115495342/195986168-b850abac-e422-4523-964a-76f2f817f0f1.png)
+
 * I/O cells (ex: sky130_fd_io)
 ![image](https://user-images.githubusercontent.com/115495342/195986195-ff5cf470-f237-4e4f-9ba7-68f1d6729f86.png)
+
 * 3rd party libraries (ex: sky130_ml_xx_hd)
 ![image](https://user-images.githubusercontent.com/115495342/195986212-294d7d76-f805-4e21-bc7b-67795b969b5e.png)
+
+
+#### Sky130 PDK Metal Stack
+The thickness of the metal layers of the Sky130 PDK are progressive, ranging from the top metal 5 layer, which is 1.26 µm, to the lowest metal 1 layer, which is 0.36 µm. TiN (Titanium Nitride), often known as LI or local interconnect, is a 0.1-m layer that sits above polysilicon and beneath the metal 1 layer.
+![image](https://user-images.githubusercontent.com/115495342/195986447-c2ddf388-d67f-41c1-a2ec-c60346682bf3.png)
 
