@@ -3,7 +3,7 @@
 
 ## What this workshop provides:
 
-* This workshop aims to provide a thorough understanding of the Physical Verification methodology using Magic, NetGen, and OpenLane Flow in order to be able to correct the various issues that arise during the design cycle as Design Rule Check (DRC) or Layout vs Schematic (LVS) violations. We also go into great detail on the Sky130 Process Design Kit (PDK) over the course of 5 days. Every topic in the course had challenging labs that were completed on the VSD-IAT platform on the Sky130 PDK.
+* This workshop aims to provide a thorough understanding of the Physical Verification methodology using Magic, NetGen, and OpenLane Flow in order to be able correct the various issues that arise during the design cycle as Design Rule Check (DRC) or Layout vs Schematic (LVS) violations. We also go into great detail on the Sky130 Process Design Kit (PDK) over the course of 5 days. Every topic in the course had challenging labs that were completed on the VSD-IAT platform on the Sky130 PDK.
 
 **Organized by**: Kunal Gosh, Co-founder, VSD Corp. Pvt. Ltd. <br />
 **Instructor** : Tim Edwards, works as Senior Vice President for Efabless and a open tools developer. <br />
@@ -586,6 +586,21 @@ Layout vs Schematic (LVS) and Design Rule Checking (DRC) are the two most import
 ![image](https://user-images.githubusercontent.com/115495342/196004104-bc8e3481-4795-4207-b81e-b05cf3fa57f1.png)
 
 LVS tools are incredibly quick and effective at telling you whether the two netlists match or not. These tools, however, do a terrible job of explaining why netlists do not match when they do. It is crucial for a verification engineer to understand how to interpret the findings of an LVS tool and identify the issue.
+The schematic and layout netlists are required by any LVS tool. Traditionally, netlists used for this purpose are in .spice format, though any format with sufficient circuit information will do (lef/def, verilog, blif, etc.). Verilog and Spice are both simulated file formats that Netgen accepts.
+
+The schematic is transformed into a netlist as part of the conventional LVS cycle. Starting with RTL verilog, which is a behavioural description rather than a physical description of the design, is an alternative to this. Synthesis tools like yosys are employed in this situation to translate behavioural verilog to gate level netlists. For layout compatibility, this netlist runs through a synthesis back end.
+
+## Schematics and LVS Matching
+
+Keeping the hierarchy of a schematic aligned with the hierarchy of the layout is crucial when developing schematics for larger projects. Although layouts typically have more hierarchical layers because related cells are grouped together, guard rings, etc., the LVS tool is made to handle more layers of hierarchy. Since it is much simpler to practise LVS at the block level than the transistor level, hierarchy is a suitable way to do so. Blocks of errors can be easily identified and contained.
+
+Simply put, the process of LVS matching involves looking for devices and nets. A device may be the same if it "looks the same" in both netlists, which means it has the same kind of nets attached to the device terminals. Similar to this, both nets may be the same if a net in both netlists is linked to the same kind of gadget.
+
+### Netgen
+Netgen is a tool used for LVS testing and comparison and can be run from its console which is a Tcl/tk interpreter. Netgen commands can be run in batch mode and the syntax to run LVS in netgen is:
+``` netgen -batch lvs "filename1 subcircuit1" "filename2 subcircuit2" setup_file output_file
+    netgen -batch script_file
+    netgen -batch netgen_command ```
 
 #### Lab: Intro to LVS
 Use the following commands
@@ -628,6 +643,7 @@ Generate the schematic netlist. Invoke xschem window.
 ![image](https://user-images.githubusercontent.com/115495342/196005422-53c3066a-11da-4db3-82b2-770516c2f680.png)
 
 From simulation menu, enable the option: "LVS netlist: top level is a .subckt" and click netlist. This should generate a .spice file. Now open magic and extract. Later, running lvs on these two netlists, we get a mismatch
+
 ![image](https://user-images.githubusercontent.com/115495342/196005775-79512dcf-75eb-43de-bfb5-d9a58a08afd1.png)
 
 This is because as we do not have the subcircuit definitions for the files. Run lvs for the wrapper we get a net match but a pin mismatch. The reason for this can be pinpointed by opening the wrapper subcircuit in magic and finding that ip_analog[4] pin in the layout is tied to io_clamp_high[0]. This can be fixed by replacing the bridge between the two nets with a resistor of type rmetal3 to separate the cells.
