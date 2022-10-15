@@ -75,10 +75,10 @@ Several open repositories make up the SkyWater Open PDK, primarily:
 
 #### The tools which are used in the workshop:
 
-* magic 
-* xschem
-* netgen
-* ngspice
+* magic - layout, DRC validation
+* xschem - create a schematic
+* netgen - LVS Validation
+* ngspice - Simulation Validation
 
 #### The libraries supported by open_pdks are:
 
@@ -98,8 +98,75 @@ Several open repositories make up the SkyWater Open PDK, primarily:
 
 ![image](https://user-images.githubusercontent.com/115495342/195986212-294d7d76-f805-4e21-bc7b-67795b969b5e.png)
 
+Open_PDKs uses a common installed filesystem structure, where the SkyWater PDKs are placed under the directory like ```/usr/share/pdk/sky130A/```. Under this main SK130 PDK directory, are two sub-directories ```libs.tech```, which contains all subdirectories for the open source tool setups, and ```libs.ref```, which contains the reference libraries in various formats. The project directory follows a similar format, with a ```project_root/``` directory containing subdirectories for each tool or flow needed.
 
 #### Sky130 PDK Metal Stack
 The thickness of the metal layers of the Sky130 PDK are progressive, ranging from the top metal 5 layer, which is 1.26 µm, to the lowest metal 1 layer, which is 0.36 µm. TiN (Titanium Nitride), often known as LI or local interconnect, is a 0.1-m layer that sits above polysilicon and beneath the metal 1 layer.
+
 ![image](https://user-images.githubusercontent.com/115495342/195986447-c2ddf388-d67f-41c1-a2ec-c60346682bf3.png)
+
+### Physical Verification and Design Flows
+ Physical verification is a sign-off flow after Physical Design is used to check whether you have a mask layout that matches what you think the circuit should be. The general design flow for physical verification is given below.
+
+![image](https://user-images.githubusercontent.com/115495342/195988092-b6f963af-ad28-4a33-9167-3a37c628ba96.png)
+
+The two major steps involved in physical verification are 
+* Design Rule Checking - used to ensure that your layout matches all the rules provided by the foundry for that specific process, and 
+* Layout Vs. Schematic - which is to ensure that your layout netlist matches with your schematic netlist.
+
+
+### Lab 1 - Checking Tool Installations in the open-source plaform
+
+1. Magic: It can be run by giving the command ```magic``` in the command line interface/terminal. This gives two window will be popped up one is layout1 and other one is console is a tcl interpreter used to run commands for layout and to perform actions in the layout1 window. 
+![image](https://user-images.githubusercontent.com/115495342/195988307-9c4432a9-2f1f-4f7d-9047-a9d743f73941.png)
+
+We can also get the tcl interpreter in the terminal itself instead of the seperate console window by using the option ```magic -noconsole```. 
+![image](https://user-images.githubusercontent.com/115495342/195988538-3aaf0149-2de8-4d17-b0a6-e00d2fc58c30.png)
+
+Magic can also be run without the graphics layout window using the option ```magic -dnull - noconsole```, and should be called as such when running from a script.
+![image](https://user-images.githubusercontent.com/115495342/195988549-1ec0356e-1a6b-4a63-8ccb-e46fc104f4e2.png)
+
+To run magic in batch mode, create a file called ```test.tcl``` use the command ```magic -dnull -noconsole filename.tcl```.
+![image](https://user-images.githubusercontent.com/115495342/195989620-ea05fcaf-0d6f-40e2-9589-99c7c24ad903.png)
+
+2. Netgen: To run Netgen using the command ```netgen``` in the terminal. It is completely command driven and has no graphics interface. 
+![image](https://user-images.githubusercontent.com/115495342/195989440-26ad7bfd-0358-464f-affe-feb6a643ab4d.png)
+
+We can get the tcl interpreter in the terminal itself instead of the seperate console window by using the option ```netgen -noconsole```.
+![image](https://user-images.githubusercontent.com/115495342/195989479-431717c9-5026-4624-a1af-2da87b6f031d.png)
+
+To run netgen in batch mode, cab use the command ```netgen -batch source filename.tcl```. 
+![image](https://user-images.githubusercontent.com/115495342/195989573-eb522f3f-12a2-42b2-8114-1f8544a45e0c.png)
+
+Netgen can also provides a GUI window which is written in python script that can be accessed using path ```usr/local/lib/netgen/pyhton/lvs_manager.py```, though this interface hides many useful options that cannot be accessed with just this window itself.
+
+![image](https://user-images.githubusercontent.com/115495342/195989713-055d2f5c-11e7-4d01-9131-d9e56d1a1eeb.png)
+
+3. Xschem: It can be accessed using the command as ```xschem``` in the terminal and this should bring up a schematics window. 
+![image](https://user-images.githubusercontent.com/115495342/195989779-935a03dc-8dab-45ae-a345-ff6f7f438883.png)
+
+Xschem can be run in batch mode with the command ```xschem --tcl filename.tcl -q```.
+![image](https://user-images.githubusercontent.com/115495342/195989823-25f687cc-51ac-48df-a61a-068c4dc9206f.png)
+
+4. Ngspice: It can be used by run using the command ```ngspice``` in the linux command line. Ngspice has its own prompt and runs its own set of interpreter commands that aren't based on tcl.
+![image](https://user-images.githubusercontent.com/115495342/195989873-e5d4672d-effb-4f5b-ae09-5419b86cce4e.png)
+
+It can be run in batch mode using the option ```ngspice -b```.
+
+![image](https://user-images.githubusercontent.com/115495342/195989928-5cf0bbc5-499b-4b07-9884-f11f58136a21.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
