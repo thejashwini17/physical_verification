@@ -253,6 +253,7 @@ We should click the Netlist button to generate the netlist, and then we can clic
 Now that the working of our inverter schematic has been validated, we just need a netlist of exclusively that, not the entire test bench. Open the inverter from the files menu, choose "LVS netlist: top level is a .subsckt" from the suimulation menu, and then click netlist. This verifies if we have properly defined a sub circuit for creating a layout cell with pins in the layout. Close xschem.
 
 Now, we can able to import the schematic to magic to create the layout. Open magic by moving to the /mag directory and using ```magic -d XR``` . Go to file --> Import SPICE and select the inverter.spice file from the xschem directory. 
+
 ![image](https://user-images.githubusercontent.com/115495342/195993860-6d3a12ba-fcc0-4e9a-9921-16f020896e98.png)
 
 As you can see, because to the complexity of analog place and route, the schematic import does not know how to do. They must be manually wired together and placed in the ideal locations. The input, output, and supply pins can be repositioned as we start by positioning the pfet device above the nfet. What should we obtain is as following.
