@@ -312,11 +312,142 @@ As chips get denser, the scale of physical verification increases. While chip de
  * Makes sure that the design layout electrically matches the design, as implemented in schematic form or any form that electrically describes the design specification
 
 Modern LVS in verification works by comparing the netlists, one starting from an initial schematic described by an RTL (Verilog/VHDL) and then running through synthesis, and the other one moving backwards from the completed layout, back to the extraction to obtain a netlist for comparison. Some popular open source tools for the same are:
+
 ![image](https://user-images.githubusercontent.com/115495342/195996187-ad182f1c-3f9b-4aa4-bfe0-9d7523653718.png)
 
 The Graphic Design System (GDS), more widely used by its successor, GDSII is a database file format which is the most widely used and preferred format for mask manufacturing foundries. It is a binary file format denoting geometric shapes, text labels, and other information about the layout in hierarchical form. This data is widely divided into:
 1. Data (Rectangles, Polygons, Subcells)
 2. Metadata (Labels, Cell names, Instance names)  
+
+### Lab2: GDS read and Input Styles
+
+First, we shaould create a project directory and set it up for running a Magic environment.
+![image](https://user-images.githubusercontent.com/115495342/195998350-4c55bcae-71f8-44be-98be-fdb03ad5198e.png)
+
+Now work on GDS read and therefore styles in magic. Open magic in your workspace and enter ```cif istyle xxx``` . The xxx could be anything, but the point is that the output shows the currently enabled style as well as all the available options.
+![image](https://user-images.githubusercontent.com/115495342/195999123-ed7f498d-0a66-44ca-9671-5729ffb1f828.png)
+
+Now, using the default enabled style i.e. ```gds read``` from the sky130 directory. Type:  
+```gds read /usr/share/pdk/sky130A/libs.ref/sky130_fd_sc_hd/gds/sky130_fd_sc_hd.gds```
+
+![image](https://user-images.githubusercontent.com/115495342/195999196-3b0b87e7-c313-4928-b026-92e8ab6b7084.png)
+
+### Lab: Port and Port index
+Select a simple cell from Options --> Cell manager such as sky130_fd_sc_hd__and2_1:
+![image](https://user-images.githubusercontent.com/115495342/195999233-8c390b4c-cc9b-4f49-968b-eb9ef73b8879.png)
+
+set the style using `cif istyle sky130()`
+
+![image](https://user-images.githubusercontent.com/115495342/195999284-9e52b034-0da2-44ca-aa7c-627c81614e49.png)
+
+The labels in the layout view are marked in yellow color, which means they are treated as regular text. Now, we shall use the sky130(vendor) style. To do this, run `cif istyle sky130(vendor)` and then read the gds files from the library. The current and2_1 layout will automatically be overwritten.
+
+![image](https://user-images.githubusercontent.com/115495342/195999448-cbf10020-ec4b-478b-b572-7ea2a65a8514.png)
+
+ Now labels are colored blue, which means they are treated as ports.
+ 
+ Now, to get information about ports, select a label and then type ```what``` in the console. Another way to do this is to use ```port first``` to get information about the port indexed by magic as 1.
+
+![image](https://user-images.githubusercontent.com/115495342/195999762-d01fce88-e4d9-4440-a9c5-e75c5dd9687b.png)
+
+Let's look at the and2_1 subcircuit definition by locating the library directory and opening the file labeled sky130_fd_sc_hd.spice.
+![image](https://user-images.githubusercontent.com/115495342/195999950-8a48b5f1-fd24-41e7-a6d8-406b50599f23.png)
+
+Here, if we search for the and2_1 cell definition, we can see the following.
+
+![image](https://user-images.githubusercontent.com/115495342/195999845-455416e1-cc0b-4265-902a-7a2c41962ded.png)
+
+### Lab - Abstract Views
+
+Open Magic window and read the lef library file using `lef read /usr/share/pdk/sky130A/libs.ref/sky130_fd_sc_hd/lef/sky130_fd_sc_hd.lef` and load the same cell and2_1 cell from the Cell Manager. The Abstract view of the cell as shown below.
+![image](https://user-images.githubusercontent.com/115495342/196000080-d73c0689-576e-4789-ae30-e218e559dd9c.png)
+
+Lets us check port information, port order metadata isn't present in the lef files.
+![image](https://user-images.githubusercontent.com/115495342/196000190-5523b0fc-61eb-4f78-8eab-6afb192bec24.png)
+
+Run the readspice script like before and load the cell again.
+![image](https://user-images.githubusercontent.com/115495342/196000278-6e621e5d-6cc2-4f28-977d-840288391da5.png)
+
+Abstract view is not same representation of the layout. Create a new layout using `load test` and instantiate the and cell using `getcell sky130_fd_sc_hd__and2_1`. An abstract view of the and2_1 cell as below.
+![image](https://user-images.githubusercontent.com/115495342/196000367-ed776a96-b63f-48a6-be95-c6d06a8e6114.png)
+
+Try to write this lef file to a gds file using `gds write test`, we get the following error message.
+![image](https://user-images.githubusercontent.com/115495342/196000440-eda64d1e-28ce-4f61-90c2-0fe83099f7aa.png)
+
+Open new Magic session, try to read the gds file.
+![image](https://user-images.githubusercontent.com/115495342/196000631-4f701f82-6c19-4e7b-9fc1-55dd9e94ecec.png)
+
+### Lab: Basic Extraction
+Open magic
+![image](https://user-images.githubusercontent.com/115495342/196000807-97cfb773-0abd-4e30-9b16-033b6475d393.png)
+
+Spice file is creaated
+![image](https://user-images.githubusercontent.com/115495342/196000823-6f335973-5464-4d4d-92d4-a098f7238e9d.png)
+
+![image](https://user-images.githubusercontent.com/115495342/196000861-54d68e62-d3e0-445d-8e40-13ba9a05e2b7.png)
+
+To run the extraction, but with parasitic capacitances included, use following commands.
+![image](https://user-images.githubusercontent.com/115495342/196000944-c752d6b9-a4ae-4634-8d46-996509be003b.png)
+
+The generated netlist is shown below, and it contains lines starting with C to denote the parasitic capacitances.
+![image](https://user-images.githubusercontent.com/115495342/196000968-41a60c22-9419-471c-8db4-8cc69fbddc40.png)
+
+Now take cthresh of 0.1, we get reduced number of parasitics in the netlist.
+![image](https://user-images.githubusercontent.com/115495342/196001125-f90b7770-d9c5-4201-af50-7d56c5812710.png)
+
+![image](https://user-images.githubusercontent.com/115495342/196001083-88d4fd9a-8463-4154-bb18-c1eafaf6283d.png)
+
+To run a full RC extraction
+![image](https://user-images.githubusercontent.com/115495342/196001221-d7adc504-1ed0-472b-8c23-249fd23a6d98.png)
+
+### Lab - Setup for DRC
+
+To set up standard DRC,use the following commands to run a python script.
+![image](https://user-images.githubusercontent.com/115495342/196001347-c3ccbc17-9b5a-4133-ae0a-3ee38c73b996.png)
+
+The output comes in a .txt file.
+![image](https://user-images.githubusercontent.com/115495342/196001368-0bbc7caa-8b3c-47b4-a868-69226fa3de5f.png)
+![image](https://user-images.githubusercontent.com/115495342/196001405-c952d963-c294-484d-a124-0925a3c9ca51.png)
+
+There are DRC errors in the vendor .mag file for the and2_1 subcell as the standard cell layouts do not have internal connections to the well and substrate to save, and the layout depends on tap cells to make those connections. Since we haven't seen these DRC errors earlier in Magic it is because the DRC script runs a full DRC check, while the default DRC style in Magic was a fast DRC.
+Change the DRC style to full, and force a DRC check, we can see DRC errors present in the standard cell.
+![image](https://user-images.githubusercontent.com/115495342/196001553-4461c356-de59-4b89-a101-24330d1ba55d.png)
+
+![image](https://user-images.githubusercontent.com/115495342/196001577-5ee35ed0-34cb-46e6-93a8-2a95ce26ce4b.png)
+
+Add and align a tap cell in the existing layout, so that there are no more DRC errors in the top level.
+![image](https://user-images.githubusercontent.com/115495342/196001677-2a5770dc-9504-4de2-b475-692ae5634aff.png)
+
+If we descend into the and2_1 cell layer though, the DRC errors are still present. But in the top level layout, these errors get fixed.
+![image](https://user-images.githubusercontent.com/115495342/196001663-f7421e32-0081-4d5d-9b28-12819460c090.png)
+
+
+
+
+
+
+
+
+
+
+
+Start by cloning the following git repository:  
+```git clone https://github.com/RTimothyEdwards/vsd_drc_lab.git```  
+cd into the lab folder and run ```./run_magic``` in the command line to start magic.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
