@@ -640,8 +640,12 @@ Generate the schematic netlist. Invoke xschem window.
 
 
 
+# Acknowledgements
 
-
+* R. Timothy Edwards
+* Kunal Gosh
+* VSD-IAT
+* Google
 
 
 
