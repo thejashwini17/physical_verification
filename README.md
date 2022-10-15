@@ -155,8 +155,51 @@ It can be run in batch mode using the option ```ngspice -b```.
 
 ![image](https://user-images.githubusercontent.com/115495342/195989928-5cf0bbc5-499b-4b07-9884-f11f58136a21.png)
 
+Let's use an inverter design as a simple example to become familiar with these open source tools. For each of the open source tools be using, should first create a directory called ```inverter``` for the design and initialise subdirectories under that directory. 
+![image](https://user-images.githubusercontent.com/115495342/195990267-50ddfd3f-af06-4bfc-aed8-ba2cdc25e50d.png)
 
+Later should set up each directory for its respective tool to run properly with the SkyWater PDKs. This can be done by creating a symbolic link between the just initialised su-bdirectories and the SKY130 submodules created with the open_pdks installer. This is done using the command ```ln -s /file_path``` in the desired sub-directory. As we will run ngspice simulations using xschem, so we setup ngspice under the xschem subdirectory itself.
+![image](https://user-images.githubusercontent.com/115495342/195990382-a961e295-718a-483d-9198-923c012d74a4.png)
 
+Let's use the command ```xschem``` to launch Xschem. You are then introduced to the SKY130 devices on the dashboard for xschem that appears with lot of example schematic symbols, as seen below. By selecting the appropriate rectangle and pressing the E key on the keyboard, users can access examples. By using CTRL+E, the menu can be accessed once again. The schematic can be resized with the F key to fit the window.
+![image](https://user-images.githubusercontent.com/115495342/195990566-1dea2a92-0fab-415f-adab-bcb470d4c175.png)
+
+Now, can able to check the magic installation using the command ```magic``` in the /mag sub-directory. This should bring up the two magic windows, with the layout window displaying "Technology: sky130A", along with many colors and icons displaying the available layers in this technology, as show below.
+![image](https://user-images.githubusercontent.com/115495342/195990656-78d2ac66-caa7-4596-b068-ed96e5a1656b.png)
+
+Use the command ```magic -d XR``` to invoke a graphics package which uses 3D acceleration to get better rendering than the default graphics. There is also an OpenGL based graphics package that can be accessed using ```magic -d -OGL```. 
+![image](https://user-images.githubusercontent.com/115495342/195990772-efa09f1d-0ec9-49fd-a24a-bbe7117c1a1a.png)
+
+Magic shortcuts that are useful
+1. Cursor box adjustments are made with the left and right mouse buttons.
+2. Zoom out with Shift + Z.
+3. selecting a layer with the middle mouse button or P (also known as painting)
+4. E to Erase anything in the cursor box by pressing the key (can also be done by clicking the middle mouse button on an empty part of the layout)
+5. You can view the complete layout with V.
+6. Pressing CTRL+P displays the device's parameter settings.
+7. In order to pick layers, press the S key.
+8. You can access information about the selected layer by using the what command in the magic console. You can type commands in the magic console without switching between windows as long as you press the Enter key first.
+9. The I key can be used to choose a device, while the M key moves them
+
+Now create devices using the two Devices drop down buttons. Let us select the nmos (mosfet) under "Devices 1" and set the width to 2 um, length to 0.5 um and fingers to 3. This should result in the following device being created.
+![image](https://user-images.githubusercontent.com/115495342/195991144-a2aee167-c535-4cfe-ade4-956ac3578305.png)
+
+Later in layout1 window press 'v' to view
+![image](https://user-images.githubusercontent.com/115495342/195991230-a726fa47-166c-45cc-9eaa-8e833e6f4b07.png)
+
+When uncheck the ```add guard ring``` option
+![image](https://user-images.githubusercontent.com/115495342/195991275-8f866392-afec-4ea6-8891-f9caa684780c.png)
+
+By selecting the layers, type ```what``` we can get name of the selected layers
+![image](https://user-images.githubusercontent.com/115495342/195991361-975ec6d4-b478-46f1-95a2-46b4a0b26645.png)
+
+### Lab: Creating an Inverter Design in transistor level
+
+Let's launch xschem and select File to open a new schematic. To access SkyWater components, select the SkyWater library directory path and then pick the ```fd_pr_library```. 
+![image](https://user-images.githubusercontent.com/115495342/195991631-c5b9e5c9-3472-4519-a35e-c88473e93ffb.png)
+
+We require a fundamental nfet and pfet to build an inverter. Therefore, choose a pfet3_0.1v8.sym  and nfet3_0.1v8.sym  device from the insert window and then locate it wherever you choose in the schematic.
+![image](https://user-images.githubusercontent.com/115495342/195991654-a7e789c8-a5d6-487c-820e-31b39a486212.png)
 
 
 
