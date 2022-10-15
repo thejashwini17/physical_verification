@@ -421,19 +421,51 @@ Add and align a tap cell in the existing layout, so that there are no more DRC e
 If we descend into the and2_1 cell layer though, the DRC errors are still present. But in the top level layout, these errors get fixed.
 ![image](https://user-images.githubusercontent.com/115495342/196001663-f7421e32-0081-4d5d-9b28-12819460c090.png)
 
+### Lab: Setup for LVS
+Create a subdirectory for Netgen. Copy the Netgen setup and run Netgen on the and2_1 netlist files
+![image](https://user-images.githubusercontent.com/115495342/196001813-1d661474-dadf-4b28-a366-b581855a8346.png)
+
+After executed, should get that the netlists match.
+![image](https://user-images.githubusercontent.com/115495342/196001846-4e6d90e5-6c08-49b7-b0b1-4be47e317e36.png)
+
+### Lab: Setup for XOR
+Open Magic and load a locally saved version of the and2_1 layout so that it can be editable.
+![image](https://user-images.githubusercontent.com/115495342/196001952-f761e13b-ce18-40d2-ad85-184db5f967fd.png)
+
+Next, we will make a small but noticable change on the layout using the erase command.
+![image](https://user-images.githubusercontent.com/115495342/196002005-ab226d32-c882-476e-b7d8-c99ae2b13184.png)
+
+To perform the XOR operation against the standard cell run commands as shown below. Here, the -nolabels option is used so that the operation is only performed on layout geometry.
+![image](https://user-images.githubusercontent.com/115495342/196002063-ac62b286-a010-48d9-a0c2-3b43596b2795.png)
+
+Final layout contains the small layer of polysilicon which was erased. This operation scales very well for larger circuits as well. Let us try this on the test3 layout created earlier. Load the file, then flatten it into another layout called xortest. Now select the and2_1 cell and move it over to the right by 1 place, we should get the following.
+![image](https://user-images.githubusercontent.com/115495342/196002147-aba2f191-3b54-41b3-8d2a-c83be0c19f92.png)
+
+Xor this moved layout with the flattened layout xor_test, we get the resulting layout.
+![image](https://user-images.githubusercontent.com/115495342/196002178-c6bef49d-c4e2-4e99-a358-ca4cf5a15f6e.png)
 
 
+## Day 3: Design Rule Checking
 
+### Fundamentals of Design Rule Checking
 
+Tolerances for the fabricated designs vary depending on the silicon production method. These tolerances are based on the probabilities of expected failure/defects found in a manufactured batch, expressed in parts per million, and are dependent on the conditions and equipment employed in the manufacturing environment. As a result, in order to prevent chip failure, each procedure has a unique set of guidelines that must be followed. These guidelines are provided in the layout's geometry. These are referred to as design rules, and design rule verification is the process of complying to these rules.
 
-
-
-
-
-
+### Lab - Width and Spacing Rules
 Start by cloning the following git repository:  
 ```git clone https://github.com/RTimothyEdwards/vsd_drc_lab.git```  
 cd into the lab folder and run ```./run_magic``` in the command line to start magic.
+![image](https://user-images.githubusercontent.com/115495342/196002306-dfe2ffcb-6c25-48ee-9ada-51958b395469.png)
+![image](https://user-images.githubusercontent.com/115495342/196002334-b33f43a7-d31f-47e5-af60-14021448ec67.png)
+
+
+From the file menu, open exercise1 which should open a .mag layout containing 4 types of DRC violations as shown
+![image](https://user-images.githubusercontent.com/115495342/196002316-0556d601-1a93-4320-bebe-faf99a05c16b.png)
+
+#### Ex1: Width rule
+![image](https://user-images.githubusercontent.com/115495342/196002377-18e947ee-7b1c-47c5-8df1-20ccea6cb14e.png)
+
+
 
 
 
