@@ -292,7 +292,31 @@ ext2spice
 
 Here, the command ```ext2spice cthresh 0``` tells magic to add all the parasitic capacitances to the spice netlist. 
 
+## Day 2: Introduction to DRC and LVS
 
+### Fundamentals of physical verification:-  
+
+The difference between physical design and design failure is physical verification. Physical verification aims to identify any potential design errors that can inhibit proper functioning or even result in a foundry rejection of manufacturing. To be able to confirm and validate proper electrical and logical functionality as well as manufacturability, efficient tools are needed.Verification involves numerous steps such as: 
+
+* Design Rule Check (DRC)
+* Layout vs Schematic (LVS)
+* XOR
+* Antenna Checks
+* Electrical Rule Check
+
+As chips get denser, the scale of physical verification increases. While chip designs can be hierarchical, physical verification is not. The two primary aspects of physical verification are as follows:
+
+1. Design Rule Checks (DRC)
+ * Ensures that the design layout meets all the silicon foundry rules for mask making
+2. Layout vs. Schematic (LVS)
+ * Makes sure that the design layout electrically matches the design, as implemented in schematic form or any form that electrically describes the design specification
+
+Modern LVS in verification works by comparing the netlists, one starting from an initial schematic described by an RTL (Verilog/VHDL) and then running through synthesis, and the other one moving backwards from the completed layout, back to the extraction to obtain a netlist for comparison. Some popular open source tools for the same are:
+![image](https://user-images.githubusercontent.com/115495342/195996187-ad182f1c-3f9b-4aa4-bfe0-9d7523653718.png)
+
+The Graphic Design System (GDS), more widely used by its successor, GDSII is a database file format which is the most widely used and preferred format for mask manufacturing foundries. It is a binary file format denoting geometric shapes, text labels, and other information about the layout in hierarchical form. This data is widely divided into:
+1. Data (Rectangles, Polygons, Subcells)
+2. Metadata (Labels, Cell names, Instance names)  
 
 
 
