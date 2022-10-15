@@ -185,9 +185,11 @@ Now create devices using the two Devices drop down buttons. Let us select the nm
 ![image](https://user-images.githubusercontent.com/115495342/195991144-a2aee167-c535-4cfe-ade4-956ac3578305.png)
 
 Later in layout1 window press 'v' to view
+
 ![image](https://user-images.githubusercontent.com/115495342/195991230-a726fa47-166c-45cc-9eaa-8e833e6f4b07.png)
 
 When uncheck the ```add guard ring``` option
+
 ![image](https://user-images.githubusercontent.com/115495342/195991275-8f866392-afec-4ea6-8891-f9caa684780c.png)
 
 By selecting the layers, type ```what``` we can get name of the selected layers
@@ -199,13 +201,95 @@ Let's launch xschem and select File to open a new schematic. To access SkyWater 
 ![image](https://user-images.githubusercontent.com/115495342/195991631-c5b9e5c9-3472-4519-a35e-c88473e93ffb.png)
 
 We require a fundamental nfet and pfet to build an inverter. Therefore, choose a pfet3_0.1v8.sym  and nfet3_0.1v8.sym  device from the insert window and then locate it wherever you choose in the schematic.
+
 ![image](https://user-images.githubusercontent.com/115495342/195991654-a7e789c8-a5d6-487c-820e-31b39a486212.png)
 
+It is best practice to make the circuit sections that will be converted to a layout self-contained in order to avoid including any extra components that are not required in the layout since we want to convert the schematic to a layout. Additionally, since there is no concept of a global supply pin or network in a layout, it is wise to avoid using any specialised power supply pins. When validating layouts later, problems may arise if certain procedures are not followed.
+
+Pins can be found in the insert window's xschem library because they are not PDK-specific. These have the filename extensions ipin.sym, opin.sym, and iopin.sym. After placing the pins and hovering over the component in the schematic window, we can move them around by pressing the M key. Component copies can be made by pressing the C key. The Del key can also be used to remove components. The W key can now be used to connect components and insert wires between them. The next step is to give each pin a sensible name by activating the parameter window with the Q key.
+
+![image](https://user-images.githubusercontent.com/115495342/195992010-f0138b39-7040-4a2a-abb2-598a38756ca1.png)
+
+By selecting the devices with the mouse and pressing the Q key to open the parameter window, we may modify their properties. Since sram devices are the only ones that may use the default value of 0.15, we adjust the length of the parameter window to 0.18. We can choose to have three fingers and make each one 1.5 mm wide. But considering that we have nfet to three fingers, the overall width in the parameter window needs to be set to 4.5, which is three times the finger width. It is recommended not to make unnecessary modifications to the other parameters as they are PDK-specific.
+Similarly, we can adjust the parameters of the pfet to 3 fingers, width of 1 per finger, and a length of 0.18. We must specify the body to be connected to the Vdd pin as it is a 3 pin pfet.
+
+![image](https://user-images.githubusercontent.com/115495342/195992219-91bf90ae-f7f7-4347-b66c-b56e1d72dee9.png)
+
+![image](https://user-images.githubusercontent.com/115495342/195992140-63a18157-e07f-4a31-aafd-3c832e9f5fda.png)
+
+Go to file --> "Save as" and save as inverter.sch and click on OK.
+
+Our primary objective right now is to layout this circuit, but before we can do so, we must functionally validate it. To do this, we must build an independent test bench using the schematic as a symbol. Select "Make symbol from schematic" from the symbol menu. We now open a new schematic from file to initiate our testbench schematic. Press the insert key and then browse to inverter.sym in the local directory after the schematic is open.
+
+![image](https://user-images.githubusercontent.com/115495342/195992455-f4fdf5d7-f5d2-434d-8eea-8939c8463af0.png)
+![image](https://user-images.githubusercontent.com/115495342/195992572-0daf8867-e683-414f-9bef-65e86982e2c4.png)
+
+The testbench will be fairly simple. Following the connection of the power supplies, we will generate a ramp input and observe the output response. To do this, we may add two voltage sources—one for the input and one for the supply—from the standard xschem library. These can be connected, and the supply connections can also receive a GND node. The input and output signals that we wish to view in Ngspice must then be created as "opins." We should obtain the following if everything is done correctly.
+![image](https://user-images.githubusercontent.com/115495342/195992734-d62939c4-566c-407d-98aa-03a698d39339.png)
+
+Now need to add the parameters so go to V2 and set the value to 1.8 and go to V1 and set the value to a PWL sweep as shown.
+![image](https://user-images.githubusercontent.com/115495342/195992912-3d51846c-d1c5-4c05-b969-827f94ff1e70.png)
+
+Here, the PWL function's voltage and time parameters indicate that the supply will start at 0 volts before ramping up from 20 nanoseconds to its final value of 1.8 volts at 900 nanoseconds. Two more ngspice statements must be added after that, but since they apply to all components, text boxes are required for their placement. We choose the code_shown.sym component from the xschem library in order to insert a text box.
+
+The first one will specify the location of the device models used in the device schematic. We will use a .lib statement that selects a top level file that tells ngspice where to find all the models and also specifying a simulation corner for all the models. We shall use the typical corner with ```value = ".lib /usr/share/pdk/sky130A/libs.tech/ngspice/sky130.lib.spice tt"```.
+![image](https://user-images.githubusercontent.com/115495342/195993130-d59f6386-2d57-405e-b5fe-5f39a50a1e34.png)
+
+s2 will run a transient analysis for 1 microsecond and plot the values for Vin and Vout.
+
+```value = ".control
+tran 1n 1u
+plot V(in) V(out)
+.endc"
+```
+![image](https://user-images.githubusercontent.com/115495342/195993205-213a5d32-d26f-40c3-9324-6634a9dc1851.png)
+
+This will tell ngspice to run a transient simulation for 1 ns and monitor voltages for the in and out pins. Finally, we should get the completed testbench schematic as follows, and save this as inverter_tb.sch.
+![image](https://user-images.githubusercontent.com/115495342/195993240-78aa0856-6c70-418f-85d6-ccb4390952e0.png)
+
+We should click the Netlist button to generate the netlist, and then we can click the Simulate button to simulate it in Ngspice. The subsequent waveform, which verifies that our schematic functions as an inverter, should be generated.
+![image](https://user-images.githubusercontent.com/115495342/195993393-11b4e07b-e058-4c8f-a23a-120f763ab601.png)
+
+Now that the working of our inverter schematic has been validated, we just need a netlist of exclusively that, not the entire test bench. Open the inverter from the files menu, choose "LVS netlist: top level is a .subsckt" from the suimulation menu, and then click netlist. This verifies if we have properly defined a sub circuit for creating a layout cell with pins in the layout. Close xschem.
+
+Now, we can able to import the schematic to magic to create the layout. Open magic by moving to the /mag directory and using ```magic -d XR``` . Go to file --> Import SPICE and select the inverter.spice file from the xschem directory. 
+![image](https://user-images.githubusercontent.com/115495342/195993860-6d3a12ba-fcc0-4e9a-9921-16f020896e98.png)
+
+As you can see, because to the complexity of analog place and route, the schematic import does not know how to do. They must be manually wired together and placed in the ideal locations. The input, output, and supply pins can be repositioned as we start by positioning the pfet device above the nfet. What should we obtain is as following.
+![image](https://user-images.githubusercontent.com/115495342/195994093-9c2585fb-96fa-451c-a745-fabc35fc7315.png)
+
+Next, we should able to set some of the parameters that are only adjustable in the layout which will make it more handy to wire the whole layout up. First, we need to set the "Top guard ring via coverage" to 100. This will put a local interconnect to metal1 via ta the top of the guard ring. Next, for "Source via coverage" put +40 and for "Drain via coverage" put -40. This will make an impact to split the source drain contacts, making it easy to connect them with a wire. For the nfet, we set the "Bottom guard ring via coverage" to 100, while the source and drain via coverages are set to +40 and -40, respectively, like the pfet.
+
+Later, can start to paint the wires using metal1 layers. Now, connect the source of the pfet to Vdd and source of the nfet to Vss. Similarly, connect the drains of both mosfets to the output. Finally, the input is connected to all the poly contacts of the gate. 
+![image](https://user-images.githubusercontent.com/115495342/195994293-7fcf04eb-4f90-4b78-b538-e83708991e46.png)
 
 
+Now, we can sav the file and select the autowrite option. Later run the following commands in the magic console.
 
+```
+extract do local
+extract all
+```
 
+The first command ```extract do local``` ensures that magic writes all results to the local directory. The second command ```extract all``` does the actual extraction. As the output is in magic has its own format, but we want to simulate the netlist in spice, so use the command ```ext2spice lvs``` which sets up the netlist to hierarchical spice output in ngspice format with no parasitic components which is good for simulation but not for running lvs. Next, we run the command ```ext2spice``` which generates the spice netlist. Now can quite magic window.
 
+To run LVS, first clear any unwanted files from the mag subdirectory. The .ext files are just intermediate results from the extraction and can be removed using the command ```rm *.ext``` if needed. Also clean up extra .mag files using the command ```/usr/share/pdk/bin/cleanup_unref.py -remove .```, which were any paramaterised cells that were created and saved but not used in the design.
+
+Now run LVS by entering the netgen subdirectory and using the command ```netgen -batch lvs "../mag/inverter.spice inverter" "../xschem/inverter.spice inverter"```. Remember to always use the layout netlist first and schematic netlist second as then in the side by side result the layout is on the left and the schematic is on the right. Each netlist is represented by a pair of keywords in quotes, where the first is the location of the netlist file and the second is the name of the subcircuit to compare. As we can see from the result below, there was an issue in the wiring and the netlists do not match. This is due to wiring errors in the layout.
+
+![image](https://user-images.githubusercontent.com/115495342/195994571-5a27c417-060d-4a6d-9bf3-dd19918d3b24.png)
+
+Now, if the layout is correct, the final step is to validate the layout netlist again with parasitics included. We can include both resistive and capacitive parasitics in magic netlists, though this process is complicated and requires manual interventions, excluding it from the scope of this exercise. Capacitive parasitics can be easily included though, by using the following commands in the magic console window during extraction.
+
+```
+extract do local
+extract all
+ext2spice lvs
+ext2spice cthresh 0
+ext2spice
+```
+
+Here, the command ```ext2spice cthresh 0``` tells magic to add all the parasitic capacitances to the spice netlist. 
 
 
 
